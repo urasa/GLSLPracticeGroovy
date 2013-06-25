@@ -1,0 +1,30 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+def osFamily = {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) 'windows'
+    else if (Os.isFamily(Os.FAMILY_UNIX)) 'linux'
+    else if (Os.isFamily(Os.MAC)) 'mac'
+}
+def osArch = {
+    if (Os.isArch('x86')) 'i586'
+    else if (Os.isArch('amd64')) 'amd64'
+}
+def joglclassifier = ':natives-' + osFamily() + '-' + osArch()
+
+configurations.create('joglLibs')
+dependencies {
+    joglLibs 'org.jogamp.jogl:jogl-all:2.0-rc11'
+    joglLibs 'org.jogamp.jogl:jogl-all:2.0-rc11' + joglclassifier
+    joglLibs 'org.jogamp.gluegen:gluegen-rt:2.0-rc11'
+    joglLibs 'org.jogamp.gluegen:gluegen-rt:2.0-rc11' + joglclassifier
+    
+    compile fileTree (dir: 'libs/jogl', include: '*.jar', exclude: '*natives*')
+    runtime fileTree (dir: 'libs/jogl', include: '*natives*')
+}
+
+task copyJoglLibs(type: Copy) {
+    from configurations.joglLibs
+    into 'libs/jogl'
+}
+compileJava.dependsOn copyJoglLibs
+
