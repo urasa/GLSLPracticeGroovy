@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy:2.1.5'
+    compile 'org.codehaus.groovy:groovy-all:2.1.5'
 }
 
 def scripts = ['hello':'sample.hello']
@@ -19,3 +19,4 @@ scripts.each { taskName, mainClassName ->
         main = mainClassName
     }
 }
+
