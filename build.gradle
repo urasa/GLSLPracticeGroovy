@@ -12,9 +12,9 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.1.5'
 }
 
-def scripts = ['hello':'sample.hello']
+def scripts = ['Hello':'sample.hello']
 scripts.each { taskName, mainClassName ->
-    task "$taskName" (type: JavaExec) {
+    task "run$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
         main = mainClassName
     }
