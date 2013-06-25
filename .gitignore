@@ -40,3 +40,4 @@ local.properties
 build/
 .gradle/
 .settings/
+.groovy/
