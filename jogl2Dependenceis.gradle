@@ -1,5 +1,4 @@
 import org.apache.tools.ant.taskdefs.condition.Os
-configurations.add('joglLibs')
 
 def osFamily = {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) 'windows'
@@ -12,6 +11,7 @@ def osArch = {
 }
 def joglclassifier = ':natives-' + osFamily() + '-' + osArch()
 
+configurations.create('joglLibs')
 dependencies {
     joglLibs 'org.jogamp.jogl:jogl-all:2.0-rc11'
     joglLibs 'org.jogamp.jogl:jogl-all:2.0-rc11' + joglclassifier
