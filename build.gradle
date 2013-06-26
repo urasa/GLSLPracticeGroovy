@@ -12,16 +12,16 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.1.5'
 }
 
-def scripts = ['Hello':'sample.hello']
+def scripts = ['runHello':'sample.hello']
 scripts.each { taskName, mainClassName ->
-    task "run$taskName" (type: JavaExec) {
+    task "$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
         main = mainClassName
     }
 }
 
 task runners {
-    println "task\t:\tmain class"
+    println "task    \t:\tMainClass"
     scripts.each { println "${it.key}\t:\t${it.value}" }
 }
 
