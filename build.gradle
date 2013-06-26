@@ -20,6 +20,11 @@ scripts.each { taskName, mainClassName ->
     }
 }
 
+task runners {
+    println "task\t:\tmain class"
+    scripts.each { println "${it.key}\t:\t${it.value}" }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.6'
 }
