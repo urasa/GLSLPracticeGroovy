@@ -12,7 +12,8 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.1.5'
 }
 
-def scripts = ['runHello':'sample.hello']
+def scripts = ['runHello':'sample.hello',
+               'runTriangle':'sample.GLTriangle']
 scripts.each { taskName, mainClassName ->
     task "$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
