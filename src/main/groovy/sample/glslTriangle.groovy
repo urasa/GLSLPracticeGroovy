@@ -14,38 +14,47 @@ new SwingBuilder().edt {
     defaultCloseOperation:WindowConstants.EXIT_ON_CLOSE) {
         borderLayout()
         GLJPanel gljpanel = new GLJPanel()
-        gljpanel.addGLEventListener(new glslTriangleHelper())
-        widget(gljpanel)
+        gljpanel.addGLEventListener new glslTriangleHelper()
+        widget gljpanel
     }
+}
+
+GLAutoDrawable.metaClass.gl2with = { Closure clos ->
+    clos.delegate = delegate.getGL().getGL2()
+    clos.call()
 }
 
 class glslTriangleHelper implements GLEventListener {
     int program = 0
     public void display(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2()
-        gl.glUseProgram(program)
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT)
-        drawTriangle(gl)
-        gl.glUseProgram(0)
-        gl.glFlush()
+        drawable.gl2with {
+            glUseProgram program
+            glClear GL2.GL_COLOR_BUFFER_BIT
+            drawTriangle delegate
+            glUseProgram 0
+            glFlush()
+        }
     }
-    private void drawTriangle(GL2 gl) {
-        gl.glLineWidth(10.0f)
-        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE)
-        gl.glBegin(GL2.GL_TRIANGLES)
-        gl.glColor3f(1f,0f,0f); gl.glVertex2f(-0.75f, -0.75f)
-        gl.glColor3f(0f,1f,0f); gl.glVertex2f( 0.75f, -0.75f)
-        gl.glColor3f(0f,0f,1f); gl.glVertex2f( 0.00f,  0.75f)
-        gl.glEnd()
+    private void drawTriangle(GL2 gl2) {
+        gl2.with {
+            glLineWidth 10.0f
+            glPolygonMode GL2.GL_FRONT_AND_BACK, GL2.GL_LINE
+            glBegin GL2.GL_TRIANGLES
+            glColor3f(1f,0f,0f); glVertex2f(-0.75f, -0.75f)
+            glColor3f(0f,1f,0f); glVertex2f( 0.75f, -0.75f)
+            glColor3f(0f,0f,1f); glVertex2f( 0.00f,  0.75f)
+            glEnd()
+        }
     }
 
     public void dispose(GLAutoDrawable drawable) {
     }
 
     public void init(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2()
-        gl.glClearColor(0.2f, 0.2f, 0.2f, 0.0f)
-        program = GLSLUtils.createShader(gl, 'glsl/red.vert', null)
+        drawable.gl2with {
+            glClearColor(0.2f, 0.2f, 0.2f, 0.0f)
+            program = GLSLUtils.createShader delegate, 'glsl/red.vert', null
+        }
     }
 
     public void reshape(GLAutoDrawable drawable, int arg1, int arg2, int arg3, int arg4) {
