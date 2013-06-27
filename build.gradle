@@ -2,7 +2,12 @@ apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply from: 'jogl2Dependenceis.gradle'
 
-sourceCompatibility = 1.7
+def sourceCompatibility = 1.7
+def defaultEncoding = 'UTF-8'
+
+tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
+tasks.withType(GroovyCompile).each { it.groovyOptions.encoding = defaultEncoding }
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -14,7 +19,8 @@ dependencies {
 
 def scripts = ['runHello':'sample.hello',
                'runTriangleJava':'sample.GLTriangle',
-               'runTriangle':'sample.Triangle']
+               'runGL':'sample.Triangle',
+               'runGLSL':'sample.glslTriangle']
 scripts.each { taskName, mainClassName ->
     task "$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
