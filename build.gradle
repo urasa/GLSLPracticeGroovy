@@ -19,7 +19,8 @@ dependencies {
 
 def scripts = ['runHello':'sample.hello',
                'runTriangleJava':'sample.GLTriangle',
-               'runTriangle':'sample.Triangle']
+               'runGL':'sample.Triangle',
+               'runGLSL':'sample.glslTriangle']
 scripts.each { taskName, mainClassName ->
     task "$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
