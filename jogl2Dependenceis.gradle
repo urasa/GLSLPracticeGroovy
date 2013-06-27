@@ -9,14 +9,16 @@ def osArch = {
     if (Os.isArch('x86')) 'i586'
     else if (Os.isArch('amd64')) 'amd64'
 }
-def joglclassifier = ':natives-' + osFamily() + '-' + osArch()
+def nativeClassifier = 'natives-' + osFamily() + '-' + osArch()
+def version = '2.0-rc11'
 
 configurations.create('joglLibs')
 dependencies {
-    joglLibs 'org.jogamp.jogl:jogl-all:2.0-rc11'
-    joglLibs 'org.jogamp.jogl:jogl-all:2.0-rc11' + joglclassifier
-    joglLibs 'org.jogamp.gluegen:gluegen-rt:2.0-rc11'
-    joglLibs 'org.jogamp.gluegen:gluegen-rt:2.0-rc11' + joglclassifier
+    joglLibs ([['org.jogamp.jogl:jogl-all', version],
+               ['org.jogamp.jogl:jogl-all', version, nativeClassifier],
+               ['org.jogamp.gluegen:gluegen-rt', version],
+               ['org.jogamp.gluegen:gluegen-rt', version, nativeClassifier]]
+               *.join(':'))
     
     compile fileTree (dir: 'libs/jogl', include: '*.jar', exclude: '*natives*')
     runtime fileTree (dir: 'libs/jogl', include: '*natives*')
