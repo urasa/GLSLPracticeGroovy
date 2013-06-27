@@ -22,9 +22,9 @@ dependencies {
     runtime fileTree (dir: 'libs/jogl', include: '*natives*')
 }
 
-task copyJoglLibs(type: Copy) {
+task syncJoglLibs(type: Sync) {
     from configurations.joglLibs
     into 'libs/jogl'
 }
-compileJava.dependsOn copyJoglLibs
+compileJava.dependsOn syncJoglLibs
 
