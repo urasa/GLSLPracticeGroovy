@@ -1,20 +1,39 @@
 package sample
 
+import glslpractice.Camera
 import groovy.swing.SwingBuilder
 
-import javax.media.opengl.GL2
 import javax.media.opengl.GLAutoDrawable
 import javax.media.opengl.GLEventListener
 import javax.media.opengl.awt.GLJPanel
+import javax.media.opengl.glu.GLU
 import javax.swing.WindowConstants
 
+import com.jogamp.opengl.util.FPSAnimator
+import com.jogamp.opengl.util.gl2.GLUT
 
 
+GLUT glut = new GLUT()
+GLU glu = new GLU()
+FPSAnimator animator
+int fps = 30
+Camera camera = new Camera(0d, 30d, -45d, 0d, 0d, 0d)
 
 GLEventListener glEventListener =
         new GLEventListener() {
             void display(GLAutoDrawable drawable) {
-                drawable.getGL().getGL2().with { glClear GL2.GL_COLOR_BUFFER_BIT }
+                drawable.getGL().getGL2().with {
+                    glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+
+                    glMatrixMode GL_MODELVIEW
+                    glLoadIdentity()
+
+                    camera.look glu
+
+                    glut.glutSolidCube 10f
+
+                    glFlush()
+                }
             }
             void dispose(GLAutoDrawable drawable) {
             }
@@ -25,7 +44,12 @@ GLEventListener glEventListener =
                 }
             }
 
-            void reshape(GLAutoDrawable drawable, int arg1, int arg2, int arg3, int arg4) {
+            void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+                drawable.getGL().getGL2().with {
+                    glMatrixMode GL_PROJECTION
+                    glLoadIdentity()
+                    glu.gluPerspective(30f, (float)width/(float)height, 1f, 10000f);
+                }
             }
         }
 
@@ -33,8 +57,12 @@ new SwingBuilder().edt {
     frame(title:'Sample3D', size:[400, 400], show:true,
     defaultCloseOperation:WindowConstants.EXIT_ON_CLOSE) {
         borderLayout()
-        GLJPanel gljpanel = new GLJPanel()
-        gljpanel.addGLEventListener glEventListener
-        widget gljpanel
-    }
+        new GLJPanel().with { panel ->
+            addGLEventListener glEventListener
+            addMouseListener camera
+            addMouseMotionListener camera
+            widget panel
+            new FPSAnimator(panel, fps).start()
+        }
+    }.addKeyListener camera
 }
