@@ -1,6 +1,7 @@
 package sample
 
 import glslpractice.Camera
+import glslpractice.GLSLUtils
 import groovy.swing.SwingBuilder
 
 import javax.media.opengl.GLAutoDrawable
@@ -21,17 +22,19 @@ Camera camera = new Camera(0d, 60d, -100d, 0d, 0d, 0d)
 
 GLEventListener glEventListener =
         new GLEventListener() {
+            int program = 0
             def size = 3f
             def distance = 5d
             def n = 9
             void display(GLAutoDrawable drawable) {
                 drawable.getGL().getGL2().with { gl2 ->
                     glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
-
+                    glUseProgram program
                     glMatrixMode GL_MODELVIEW
                     glLoadIdentity()
                     camera.look glu
 
+                    //glColor3d(1.0, 1.0, 1.0)
                     def offset = -(n-1)/2*distance
                     glTranslated(offset, offset, offset)
                     n.times { x ->
@@ -44,7 +47,7 @@ GLEventListener glEventListener =
                             }
                         }
                     }
-
+                    glUseProgram 0
                     glFlush()
                 }
             }
@@ -52,8 +55,10 @@ GLEventListener glEventListener =
             }
 
             void init(GLAutoDrawable drawable) {
-                drawable.getGL().getGL2().with {
+                drawable.getGL().getGL2().with { gl2 ->
+                    glEnable GL_DEPTH_TEST
                     glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
+                    program = GLSLUtils.createShader(gl2, 'glsl/depthColor.vert', null)
                 }
             }
 
