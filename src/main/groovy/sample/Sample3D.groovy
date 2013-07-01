@@ -17,20 +17,33 @@ GLUT glut = new GLUT()
 GLU glu = new GLU()
 FPSAnimator animator
 int fps = 30
-Camera camera = new Camera(0d, 30d, -45d, 0d, 0d, 0d)
+Camera camera = new Camera(0d, 60d, -100d, 0d, 0d, 0d)
 
 GLEventListener glEventListener =
         new GLEventListener() {
+            def size = 3f
+            def distance = 5d
+            def n = 9
             void display(GLAutoDrawable drawable) {
-                drawable.getGL().getGL2().with {
+                drawable.getGL().getGL2().with { gl2 ->
                     glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
 
                     glMatrixMode GL_MODELVIEW
                     glLoadIdentity()
-
                     camera.look glu
 
-                    glut.glutSolidCube 10f
+                    def offset = -(n-1)/2*distance
+                    glTranslated(offset, offset, offset)
+                    n.times { x ->
+                        n.times { y ->
+                            n.times { z ->
+                                glPushMatrix()
+                                glTranslated(distance*x, distance*y, distance*z)
+                                glut.glutSolidCube size
+                                glPopMatrix()
+                            }
+                        }
+                    }
 
                     glFlush()
                 }
@@ -66,3 +79,4 @@ new SwingBuilder().edt {
         }
     }.addKeyListener camera
 }
+
