@@ -21,7 +21,8 @@ def scripts = ['runHello':'sample.hello',
                'runTriangleJava':'sample.GLTriangle',
                'runGL':'sample.Triangle',
                'runGLSL':'sample.glslTriangle',
-               'run3D':'sample.Sample3D']
+               'run3D':'sample.Sample3D',
+               'runParam':'glslpractice.setParam']
 scripts.each { taskName, mainClassName ->
     task "$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath

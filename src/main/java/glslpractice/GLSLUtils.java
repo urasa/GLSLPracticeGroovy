@@ -100,7 +100,6 @@ public class GLSLUtils {
         byte[] infolog = new byte[infologLength[0]];
         gl.glGetShaderInfoLog(shader, infologLength[0], null,
                 ByteBuffer.wrap(infolog));
-        // TODO byte[] to String
-        return "error message";
+        return new String(infolog);
     }
 }
