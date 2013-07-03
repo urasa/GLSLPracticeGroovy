@@ -14,14 +14,19 @@ def version = '2.0-rc11'
 
 configurations.create('joglLibs')
 dependencies {
-    joglLibs ([['org.jogamp.jogl:jogl-all', version],
-               ['org.jogamp.jogl:jogl-all', version, nativeClassifier],
-               ['org.jogamp.gluegen:gluegen-rt', version],
-               ['org.jogamp.gluegen:gluegen-rt', version, nativeClassifier]]
-               *.join(':'))
-    
-    compile fileTree (dir: 'libs/jogl', include: '*.jar', exclude: '*natives*')
-    runtime fileTree (dir: 'libs/jogl', include: '*natives*')
+    compile ([['org.jogamp.jogl:jogl-all', version],
+              ['org.jogamp.gluegen:gluegen-rt', version]]*.join(':'))
+    runtime ([['org.jogamp.jogl:jogl-all', version, nativeClassifier],
+              ['org.jogamp.gluegen:gluegen-rt', version, nativeClassifier]]*.join(':'))
+
+//    joglLibs ([['org.jogamp.jogl:jogl-all', version],
+//               ['org.jogamp.jogl:jogl-all', version, nativeClassifier],
+//               ['org.jogamp.gluegen:gluegen-rt', version],
+//               ['org.jogamp.gluegen:gluegen-rt', version, nativeClassifier]]
+//               *.join(':'))
+//    
+//    compile fileTree (dir: 'libs/jogl', include: '*.jar', exclude: '*natives*')
+//    runtime fileTree (dir: 'libs/jogl', include: '*natives*')
 }
 
 task syncJoglLibs(type: Sync) {
