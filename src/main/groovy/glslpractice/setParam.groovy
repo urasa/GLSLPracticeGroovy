@@ -25,9 +25,10 @@ Camera camera = new Camera(0d, 0d, 100d, 0d, 0d, 0d)
 GLEventListener glEventListener =
         new GLEventListener() {
             int program = 0
-            def size = 1.5f
-            def distance = 3.5d
-            def n = 11
+            final float size = 1.5f
+            final double distance = 3.5d
+            final int n = 11
+            def displaylists = [:]
             float[] middle = [1.0f, 0.0f, 0.0f] as float[]
             float[] modelview = new float[16]
             int frame = 0
@@ -59,18 +60,9 @@ GLEventListener glEventListener =
                     glUniformMatrix4fv(vsModelviewLocation, 1, false, modelview, 0)
                     glPopMatrix()
 
-                    def offset = -(n-1)/2*distance
+                    def offset = -(n-1)/2f*distance
                     glTranslated(offset, offset, offset)
-                    n.times { x ->
-                        n.times { y ->
-                            n.times { z ->
-                                glPushMatrix()
-                                glTranslated(distance*x, distance*y, distance*z)
-                                glut.glutSolidCube size
-                                glPopMatrix()
-                            }
-                        }
-                    }
+                    glCallList(displaylists['cubes'])
                     glUseProgram 0
                     glFlush()
                     frame++
@@ -85,9 +77,32 @@ GLEventListener glEventListener =
                     glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
                     program = GLSLUtils.createShader(gl2, 'glsl/depth.vert', null)
                     vsMiddleLocation = glGetUniformLocation(program, "middle")
-                    if (vsMiddleLocation == -1) { println "cant get a location for middle" }
+                    if (vsMiddleLocation == -1) {
+                        println "cant get a location for middle"
+                    }
                     vsModelviewLocation = glGetUniformLocation(program, "modelview")
-                    if (vsModelviewLocation == -1) { println "cant get a location for modelview" }
+                    if (vsModelviewLocation == -1) {
+                        println "cant get a location for modelview"
+                    }
+
+                    displaylists['cubes'] = glGenLists(1)
+                    glNewList(displaylists['cubes'], GL_COMPILE)
+                    n.times { x ->
+                        n.times { y ->
+                            n.times { z ->
+                                glPushMatrix()
+                                glTranslated(distance*x, distance*y, distance*z)
+                                glut.glutSolidCube size
+                                glPopMatrix()
+                            }
+                        }
+                    }
+                    glEndList()
+                }
+            }
+
+            def makeLists = { gl2 ->
+                gl2.with {
                 }
             }
 
