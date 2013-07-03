@@ -20,12 +20,12 @@ GLUT glut = new GLUT()
 GLU glu = new GLU()
 FPSAnimator animator
 int fps = 60
-Camera camera = new Camera(0d, 0d, 100d, 0d, 0d, 0d)
+Camera camera = new Camera(80d, 80d, 100d, 0d, 0d, 0d)
 
 GLEventListener glEventListener =
         new GLEventListener() {
             int program = 0
-            final float size = 1.5f
+            final float size = 2f
             final double distance = 3.5d
             final int n = 11
             def displaylists = [:]
@@ -73,6 +73,8 @@ GLEventListener glEventListener =
 
             void init(GLAutoDrawable drawable) {
                 drawable.getGL().getGL2().with { gl2 ->
+                    glEnable GL_BLEND
+                    glBlendFunc GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
                     glEnable GL_DEPTH_TEST
                     glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
                     program = GLSLUtils.createShader(gl2, 'glsl/depth.vert', null)
