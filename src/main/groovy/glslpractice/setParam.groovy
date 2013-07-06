@@ -6,6 +6,7 @@ import java.nio.FloatBuffer
 
 import javax.media.opengl.GLAutoDrawable
 import javax.media.opengl.GLCapabilities
+import javax.media.opengl.GLEventListener
 import javax.media.opengl.GLProfile
 import javax.media.opengl.awt.GLJPanel
 import javax.media.opengl.glu.GLU
@@ -114,8 +115,9 @@ new SwingBuilder().edt {
     defaultCloseOperation:WindowConstants.EXIT_ON_CLOSE) {
         borderLayout()
         new GLJPanel(caps).with { panel ->
-            addGLEventListener new AbstractGLEventListener(
-                    init: init, display: display, reshape: reshape, dispose: {})
+            GLEventListener listener = GLEventListenerFactory.createListener(
+                    init: init, display: display, reshape: reshape)
+            addGLEventListener listener
             addMouseListener camera
             addMouseMotionListener camera
             widget panel
