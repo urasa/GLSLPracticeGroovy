@@ -111,7 +111,7 @@ caps.with {
 }
 
 new SwingBuilder().edt {
-    frame(title:'Sample3D', size:[400, 400], show:true,
+    frame(title:'シェーダにパラメータを渡す', size:[400, 400], show:true,
     defaultCloseOperation:WindowConstants.EXIT_ON_CLOSE) {
         borderLayout()
         new GLJPanel(caps).with { panel ->
