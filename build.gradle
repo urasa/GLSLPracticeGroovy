@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply from: 'jogl2Dependenceis.gradle'
 
-def sourceCompatibility = 1.7
+sourceCompatibility = 1.7
 def defaultEncoding = 'UTF-8'
 
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
