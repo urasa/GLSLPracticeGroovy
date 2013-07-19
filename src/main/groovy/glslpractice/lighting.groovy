@@ -63,7 +63,6 @@ def display = { GLAutoDrawable drawable ->
         // シェーダープログラムの選択
         glUseProgram shaders.gouraud
         // glUseProgram 0
-        glColor3f(0.2f, 0.2f, 0.8f)
         glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
         glMatrixMode GL_MODELVIEW
         glLoadIdentity()
