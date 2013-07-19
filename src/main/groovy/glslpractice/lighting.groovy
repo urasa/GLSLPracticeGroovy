@@ -75,6 +75,8 @@ def display = { GLAutoDrawable drawable ->
         glut.glutSolidCube 10f
         glPopMatrix()
 
+        glUseProgram 0
+        glColor3f(0.1f, 0.1f, 0.1f)
         glCallList displaylists.grid
         glRotated(90d, 0d, 1d, 0d)
         glCallList displaylists.grid
