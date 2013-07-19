@@ -1,17 +1,17 @@
-varying vec3 P;
+ï»¿varying vec3 P;
 varying vec3 N;
 
 void main() {
-    // ’¸“_‚©‚çŒõŒ¹‚Ö‚Ì’PˆÊ•ûŒüƒxƒNƒgƒ‹
+    // é ‚ç‚¹ã‹ã‚‰å…‰æºã¸ã®å˜ä½æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
     vec3 L = normalize(gl_LightSource[0].position.xyz - P);
-    // ‹“_‚Ö‚Ì’PˆÊ•ûŒüƒxƒNƒgƒ‹
+    // è¦–ç‚¹ã¸ã®å˜ä½æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
     vec3 V = normalize(-P);
-    // ƒn[ƒtƒxƒNƒgƒ‹
+    // ãƒãƒ¼ãƒ•ãƒ™ã‚¯ãƒˆãƒ«
     vec3 H = normalize(V + L);
-    // ‹¾–Ê”½Ëw”
+    // é¡é¢åå°„æŒ‡æ•°
     float n = gl_FrontMaterial.shininess;
 
-    // gl_FrontLightProduct[0].ambient‚Æ‚à‘‚¯‚é
+    // gl_FrontLightProduct[0].ambientã¨ã‚‚æ›¸ã‘ã‚‹
     vec4 ambient = gl_LightSource[0].ambient * gl_FrontMaterial.ambient;
     vec4 diffuse = gl_FrontLightProduct[0].diffuse * max(dot(N, L), 0.0);
     vec4 specular = gl_FrontLightProduct[0].specular * pow(max(dot(H, N), 0.0), n);

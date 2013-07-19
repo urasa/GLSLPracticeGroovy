@@ -1,11 +1,11 @@
-varying vec3 P;
+ï»¿varying vec3 P;
 varying vec3 N;
 
 void main() {
     gl_Position = ftransform();
-    // ‹“_‚É‘Î‚·‚éÀ•W
+    // è¦–ç‚¹ã«å¯¾ã™ã‚‹åº§æ¨™
     P = vec3(gl_ModelViewMatrix * gl_Vertex);
-    // ’PˆÊ–@üƒxƒNƒgƒ‹
+    // å˜ä½æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
     N = normalize(gl_NormalMatrix * gl_Normal);
 }
 
