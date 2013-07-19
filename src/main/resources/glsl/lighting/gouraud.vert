@@ -16,7 +16,7 @@ void main() {
     // gl_FrontLightProduct[0].ambientとも書ける
     vec4 ambient = gl_LightSource[0].ambient * gl_FrontMaterial.ambient;
     vec4 diffuse = gl_FrontLightProduct[0].diffuse * max(dot(N, L), 0.0);
-    vec4 specular = gl_FrontLightProduct[0].specular * pow(dot(R, V), n);
+    vec4 specular = gl_FrontLightProduct[0].specular * pow(max(dot(R, V), 0.0), n);
 
     gl_FrontColor = ambient + diffuse + specular;
     
