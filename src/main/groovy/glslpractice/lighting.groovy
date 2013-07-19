@@ -46,8 +46,6 @@ def init = { GLAutoDrawable drawable ->
         drawGrid gl2
         glEndList()
         // 固定機能パイプライン使用時には必要: GL_LIGHT0, GL_LIGHTING
-        //        glEnable GL_LIGHTING
-        //        glEnable GL_LIGHT0
         glMaterialfv GL_FRONT, GL_AMBIENT_AND_DIFFUSE, FloatBuffer.wrap([0.8f, 0.2f, 0.2f, 1.0f] as float[])
         glMaterialfv GL_FRONT, GL_SPECULAR, FloatBuffer.wrap([0.5f, 0.5f, 0.5f, 1.0f] as float[])
         glMaterialf GL_FRONT, GL_SHININESS, 100
