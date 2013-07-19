@@ -35,27 +35,34 @@ def init = { GLAutoDrawable drawable ->
     drawable.getGL().getGL2().with { gl2 ->
         glEnable GL_DEPTH_TEST
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f)
-        shaders.gourarud = GLSLUtils.createShader(gl2,
+        shaders.gouraud = GLSLUtils.createShader(gl2,
                 'glsl/lighting/gouraud.vert', null)
         shaders.phong = GLSLUtils.createShader(gl2,
                 'glsl/lighting/phong.vert', 'glsl/lighting/phong.frag')
-        glShadeModel GL_SMOOTH
         // 固定機能パイプライン使用時には必要: GL_LIGHT0, GL_LIGHTING
-        glEnable GL_LIGHTING
-        glEnable GL_LIGHT0
-        glLightfv GL_LIGHT0, GL_POSITION, FloatBuffer.wrap([100f, 100f, 0f, 0f] as float[])
+        //        glEnable GL_LIGHTING
+        //        glEnable GL_LIGHT0
+        glMaterialfv GL_FRONT, GL_AMBIENT_AND_DIFFUSE, FloatBuffer.wrap([0.8f, 0.2f, 0.2f, 1.0f] as float[])
+        glMaterialfv GL_FRONT, GL_SPECULAR, FloatBuffer.wrap([0.5f, 0.5f, 0.5f, 1.0f] as float[])
+        glMaterialf GL_FRONT, GL_SHININESS, 100
     }
 }
 final def cycleTime = 5d
 final def rotationAnglePerFrame = (360d / fps) / cycleTime
 def display = { GLAutoDrawable drawable ->
     drawable.getGL().getGL2().with { gl2 ->
-        //glUseProgram shaders.gouraud
-        glUseProgram 0
+        // シェーディングモデルの選択
+        glShadeModel GL_SMOOTH
+        //glShadeModel GL_FLAT
+        // シェーダープログラムの選択
+        glUseProgram shaders.gouraud
+        // glUseProgram 0
+        glColor3f(0.2f, 0.2f, 0.8f)
         glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
         glMatrixMode GL_MODELVIEW
         glLoadIdentity()
         camera.look glu
+        glLightfv GL_LIGHT0, GL_POSITION, FloatBuffer.wrap([100f, 100f, 0f, 1f] as float[])
 
         glPushMatrix()
         glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
