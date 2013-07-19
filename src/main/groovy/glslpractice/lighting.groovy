@@ -41,6 +41,8 @@ def init = { GLAutoDrawable drawable ->
                 'glsl/lighting/gouraud.vert', null)
         shaders.phong = GLSLUtils.createShader(gl2,
                 'glsl/lighting/phong.vert', 'glsl/lighting/phong.frag')
+        shaders.simplifiedGouraud = GLSLUtils.createShader(gl2,
+                'glsl/lighting/simplifiedGouraud.vert', null)
         displaylists.grid = glGenLists(1)
         glNewList(displaylists.grid, GL_COMPILE)
         drawGrid gl2
@@ -59,7 +61,7 @@ def display = { GLAutoDrawable drawable ->
         glShadeModel GL_SMOOTH
         //glShadeModel GL_FLAT
         // シェーダープログラムの選択
-        glUseProgram shaders.gouraud
+        glUseProgram shaders.simplifiedGouraud
         // glUseProgram 0
         glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
         glMatrixMode GL_MODELVIEW
