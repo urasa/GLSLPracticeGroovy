@@ -8,6 +8,7 @@
  */
 package glslpractice
 
+import static glslpractice.ShaderModel.*
 import groovy.swing.SwingBuilder
 
 import java.nio.FloatBuffer
@@ -23,7 +24,6 @@ import javax.swing.WindowConstants
 
 import com.jogamp.opengl.util.FPSAnimator
 import com.jogamp.opengl.util.gl2.GLUT
-
 GLUT glut = new GLUT()
 GLU glu = new GLU()
 int fps = 60
@@ -32,17 +32,33 @@ Camera camera = new Camera(0d, 0d, 100d, 0d, 0d, 0d)
 def shaders = [:].withDefault {0}
 def displaylists = [:]
 
+enum ShaderModel {
+    FLAT(GL2.GL_FLAT), S_GOURAUD(GL2.GL_SMOOTH), GOURAUD(GL2.GL_SMOOTH), PHONG(GL2.GL_SMOOTH)
+    int shadingMode
+    private ShaderModel(int shadingMode) {
+        this.shadingMode = shadingMode
+    }
+}
+def applyShaderModel = { GL2 gl2, ShaderModel model ->
+    gl2.glShadeModel model.shadingMode
+    gl2.glUseProgram shaders[model]
+}
+
+
 ///// GLEventListener Implementations ///////////////////////
 def init = { GLAutoDrawable drawable ->
     drawable.getGL().getGL2().with { gl2 ->
         glEnable GL_DEPTH_TEST
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f)
-        shaders.gouraud = GLSLUtils.createShader(gl2,
-                'glsl/lighting/gouraud.vert', null)
-        shaders.phong = GLSLUtils.createShader(gl2,
-                'glsl/lighting/phong.vert', 'glsl/lighting/phong.frag')
-        shaders.simplifiedGouraud = GLSLUtils.createShader(gl2,
+
+        shaders[S_GOURAUD] = GLSLUtils.createShader(gl2,
                 'glsl/lighting/simplifiedGouraud.vert', null)
+        shaders[GOURAUD] = GLSLUtils.createShader(gl2,
+                'glsl/lighting/gouraud.vert', null)
+        shaders[PHONG] = GLSLUtils.createShader(gl2,
+                'glsl/lighting/phong.vert', 'glsl/lighting/phong.frag')
+        shaders[FLAT] = shaders[GOURAUD]
+
         displaylists.grid = glGenLists(1)
         glNewList(displaylists.grid, GL_COMPILE)
         drawGrid gl2
@@ -59,12 +75,18 @@ final def cycleTime = 5d
 final def rotationAnglePerFrame = (360d / fps) / cycleTime
 def display = { GLAutoDrawable drawable ->
     drawable.getGL().getGL2().with { gl2 ->
-        // シェーディングモデルの選択
-        glShadeModel GL_SMOOTH
-        //glShadeModel GL_FLAT
-        // シェーダープログラムの選択
-        glUseProgram shaders.phong
-        // glUseProgram 0
+        // シェーディングモデルの適用
+        switch(animator.getTotalFPSFrames()%480) {
+            case 0..<120:
+                    applyShaderModel gl2, FLAT; break
+            case 121..<240:
+                    applyShaderModel gl2, S_GOURAUD; break
+            case 241..<360:
+                    applyShaderModel gl2, GOURAUD; break
+            case 360..<480:
+                    applyShaderModel gl2, PHONG; break
+            default: break
+        }
         glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
         glMatrixMode GL_MODELVIEW
         glLoadIdentity()
@@ -73,7 +95,7 @@ def display = { GLAutoDrawable drawable ->
 
         glPushMatrix()
         glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
-        glut.glutSolidSphere(30d, 10, 10)
+        glut.glutSolidSphere(30d, 20, 20)
         glTranslated(40d, 0d, 0d)
         glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
         glut.glutSolidCube 10f
