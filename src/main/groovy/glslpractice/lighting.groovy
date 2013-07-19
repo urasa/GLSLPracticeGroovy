@@ -12,6 +12,7 @@ import groovy.swing.SwingBuilder
 
 import java.nio.FloatBuffer
 
+import javax.media.opengl.GL2
 import javax.media.opengl.GLAutoDrawable
 import javax.media.opengl.GLCapabilities
 import javax.media.opengl.GLEventListener
@@ -29,6 +30,7 @@ int fps = 60
 FPSAnimator animator = new FPSAnimator(fps)
 Camera camera = new Camera(0d, 0d, 100d, 0d, 0d, 0d)
 def shaders = [:].withDefault {0}
+def displaylists = [:]
 
 ///// GLEventListener Implementations ///////////////////////
 def init = { GLAutoDrawable drawable ->
@@ -39,6 +41,10 @@ def init = { GLAutoDrawable drawable ->
                 'glsl/lighting/gouraud.vert', null)
         shaders.phong = GLSLUtils.createShader(gl2,
                 'glsl/lighting/phong.vert', 'glsl/lighting/phong.frag')
+        displaylists.grid = glGenLists(1)
+        glNewList(displaylists.grid, GL_COMPILE)
+        drawGrid gl2
+        glEndList()
         // 固定機能パイプライン使用時には必要: GL_LIGHT0, GL_LIGHTING
         //        glEnable GL_LIGHTING
         //        glEnable GL_LIGHT0
@@ -69,6 +75,9 @@ def display = { GLAutoDrawable drawable ->
         glut.glutSolidSphere(30d, 10, 10)
         glPopMatrix()
 
+        glCallList displaylists.grid
+        glRotated(90d, 0d, 1d, 0d)
+        glCallList displaylists.grid
     }
 }
 def reshape = { GLAutoDrawable drawable, int x, int y, int width, int height ->
@@ -76,6 +85,22 @@ def reshape = { GLAutoDrawable drawable, int x, int y, int width, int height ->
         glMatrixMode GL_PROJECTION
         glLoadIdentity()
         glu.gluPerspective(30f, (float)width/(float)height, 1f, 10000f);
+    }
+}
+def drawGrid(GL2 gl2) {
+    gl2.with {
+        final float size = 1000f
+        final int step = 25
+        glBegin GL_LINES
+        glVertex3f(0f, 0f, -size)
+        glVertex3f(0f, 0f, size)
+        (0..size).step(step) { x ->
+            glVertex3f(x, 0f, -size)
+            glVertex3f(x, 0f, size)
+            glVertex3f(-x, 0f, -size)
+            glVertex3f(-x, 0f, size)
+        }
+        glEnd()
     }
 }
 
