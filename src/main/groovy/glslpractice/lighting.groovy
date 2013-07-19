@@ -73,6 +73,9 @@ def display = { GLAutoDrawable drawable ->
         glPushMatrix()
         glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
         glut.glutSolidSphere(30d, 10, 10)
+        glTranslated(40d, 0d, 0d)
+        glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
+        glut.glutSolidCube 10f
         glPopMatrix()
 
         glCallList displaylists.grid
