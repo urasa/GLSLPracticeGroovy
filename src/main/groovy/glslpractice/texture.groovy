@@ -19,14 +19,16 @@ import com.jogamp.opengl.util.gl2.GLUT
 def makeTextureData(int size, int sNum, int tNum) {
 	final int WIDTH = size
 	final int HEIGHT = size
-	int[] data = new int[WIDTH*HEIGHT*4]
+	int[] data = new int[WIDTH*HEIGHT]
 	HEIGHT.times { j ->
 		WIDTH.times { i ->
-			int n = j*(WIDTH*4)+i*4
-			int val = ((i.intdiv(sNum))%2)*255
+			int n = j*WIDTH+i
+			int val = ((i.intdiv(sNum)+1)%2)*255
+			val = 255 + (val << 8) + (val << 16) + (val << 24)
+			data[n] = val
 //			println "[j:$j,i:$i]"
-			3.times { data[n+it] = val }
-			data[n+3] = 255
+//			3.times { data[n+it] = val }
+//			data[n+3] = 255
 		}
 	}
 	// TODO ボーダーからチェックへんこうする
@@ -75,7 +77,7 @@ def init = { GLAutoDrawable drawable ->
 		println "texname: ${texname}, textures.tex.name: ${textures.tex.name}"
 		glBindTexture GL_TEXTURE_2D, textures.tex.name
 		glTexImage2D GL_TEXTURE_2D, 0, GL_RGBA,
-				64, 64, 0, GL_RGBA, GL_INT, IntBuffer.wrap(textures.tex.data)
+				64, 64, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, IntBuffer.wrap(textures.tex.data)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
