@@ -75,4 +75,21 @@ class GLSLUtils {
             new String(infolog)
         }
     }
+
+	static def drawGrid(GL2 gl2) {
+		gl2.with {
+			final float size = 1000f
+			final int step = 25
+	        glBegin GL_LINES
+	        glVertex3f(0f, 0f, -size)
+	        glVertex3f(0f, 0f, size)
+	        (0..size).step(step) { x ->
+	            glVertex3f(x, 0f, -size)
+	            glVertex3f(x, 0f, size)
+	            glVertex3f(-x, 0f, -size)
+	            glVertex3f(-x, 0f, size)
+	        }
+	        glEnd()
+	    }
+	}
 }
