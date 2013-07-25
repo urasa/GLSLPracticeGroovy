@@ -2,6 +2,7 @@ package glslpractice
 
 import groovy.swing.SwingBuilder
 
+import java.nio.DoubleBuffer
 import java.nio.IntBuffer
 
 import javax.media.opengl.GLAutoDrawable
@@ -77,7 +78,7 @@ def init = { GLAutoDrawable drawable ->
                 'glsl/texture/texture.vert', 'glsl/texture/texture.frag'
 
         textures.check.data = makeTextureData(64, 8, 8)
-        //		println textures.check.data
+        //      println textures.check.data
         glPixelStorei GL_UNPACK_ALIGNMENT, 1
         int[] texname = [-1]
         glGenTextures(1, IntBuffer.wrap(texname))
@@ -131,20 +132,20 @@ def display = { GLAutoDrawable drawable ->
         glDisable GL_TEXTURE_2D
 
         /* テクスチャ座標の自動生成を有効にする */
-        //		glEnable GL_TEXTURE_GEN_S
-        //		glEnable GL_TEXTURE_GEN_T
+        glEnable GL_TEXTURE_GEN_S
+        glEnable GL_TEXTURE_GEN_T
 
         glPushMatrix()
         glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
-        //		glut.glutSolidSphere(30d, 20, 20)
+        glut.glutSolidSphere(30d, 20, 20)
         glTranslated(40d, 0d, 0d)
         glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
         glut.glutSolidCube 10f
         glPopMatrix()
 
         /* テクスチャ座標の自動生成を無効にする */
-        //		glDisable GL_TEXTURE_GEN_S
-        //		glDisable GL_TEXTURE_GEN_T
+        glDisable GL_TEXTURE_GEN_S
+        glDisable GL_TEXTURE_GEN_T
 
         glUseProgram 0
         glColor3f(0.1f, 0.1f, 0.1f)
