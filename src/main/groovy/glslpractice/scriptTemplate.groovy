@@ -16,6 +16,7 @@ import com.jogamp.opengl.util.gl2.GLUT
 GLUT glut = new GLUT()
 GLU glu = new GLU()
 int fps = 60
+FPSAnimator animator = new FPSAnimator(fps)
 Camera camera = new Camera(0d, 0d, 100d, 0d, 0d, 0d)
 
 
@@ -54,8 +55,9 @@ new SwingBuilder().edt {
             addGLEventListener listener
             addMouseListener camera
             addMouseMotionListener camera
+            animator.add panel
             widget panel
-            new FPSAnimator(panel, fps).start()
         }
     }.addKeyListener camera
 }
+animator.start()
