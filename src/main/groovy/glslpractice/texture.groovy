@@ -73,31 +73,31 @@ def init = { GLAutoDrawable drawable ->
         GLSLUtils.drawGrid gl2
         glEndList()
 
-        shaders.tex = GLSLUtils.createShader gl2,
+        shaders.check = GLSLUtils.createShader gl2,
                 'glsl/texture/texture.vert', 'glsl/texture/texture.frag'
 
-        textures.tex.data = makeTextureData(64, 8, 8)
-        //		println textures.tex.data
+        textures.check.data = makeTextureData(64, 8, 8)
+        //		println textures.check.data
         glPixelStorei GL_UNPACK_ALIGNMENT, 1
         int[] texname = [-1]
         glGenTextures(1, IntBuffer.wrap(texname))
-        textures.tex.name = texname[0]
-        println "texname: ${texname}, textures.tex.name: ${textures.tex.name}"
-        glBindTexture GL_TEXTURE_2D, textures.tex.name
+        textures.check.name = texname[0]
+        println "texname: ${texname}, textures.check.name: ${textures.check.name}"
+        glBindTexture GL_TEXTURE_2D, textures.check.name
         glTexImage2D GL_TEXTURE_2D, 0, GL_RGBA,
-                64, 64, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, IntBuffer.wrap(textures.tex.data)
+                64, 64, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, IntBuffer.wrap(textures.check.data)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindTexture GL_TEXTURE_2D, 0
 
-        //		/* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
-        //		glTexGeni GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR
-        //		glTexGeni GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR
-        //		/* テクスチャ座標生成関数の設定 */
-        //		glTexGendv GL_S, GL_OBJECT_PLANE, DoubleBuffer.wrap([1.0, 0.0, 0.0] as double[])
-        //		glTexGendv GL_T, GL_OBJECT_PLANE, DoubleBuffer.wrap([0.0, 1.0, 0.0] as double[])
+        /* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
+        glTexGeni GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR
+        glTexGeni GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR
+        /* テクスチャ座標生成関数の設定 */
+        glTexGendv GL_S, GL_OBJECT_PLANE, DoubleBuffer.wrap([1.0, 0.0, 0.0] as double[])
+        glTexGendv GL_T, GL_OBJECT_PLANE, DoubleBuffer.wrap([0.0, 1.0, 0.0] as double[])
         int[] a = [0]
         glGetIntegerv(GL_MAX_TEXTURE_UNITS, IntBuffer.wrap(a))
         println "max texture units: $a"
@@ -108,10 +108,10 @@ final def rotationAnglePerFrame = (360d / fps) / cycleTime
 def display = { GLAutoDrawable drawable ->
     drawable.getGL().getGL2().with { gl2 ->
         glActiveTexture GL_TEXTURE0
-        glBindTexture GL_TEXTURE_2D, textures.tex.name
+        glBindTexture GL_TEXTURE_2D, textures.check.name
 
-        glUseProgram shaders.tex
-        def samplerLocation = glGetUniformLocation shaders.tex, 'sampler'
+        glUseProgram shaders.check
+        def samplerLocation = glGetUniformLocation shaders.check, 'sampler'
         glUniform1i samplerLocation, 0
 
         glClear GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
