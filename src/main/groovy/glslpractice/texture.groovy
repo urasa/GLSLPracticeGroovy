@@ -2,7 +2,6 @@ package glslpractice
 
 import groovy.swing.SwingBuilder
 
-import java.nio.DoubleBuffer
 import java.nio.IntBuffer
 
 import javax.media.opengl.GLAutoDrawable
@@ -93,12 +92,6 @@ def init = { GLAutoDrawable drawable ->
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glBindTexture GL_TEXTURE_2D, 0
 
-        /* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
-        glTexGeni GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR
-        glTexGeni GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR
-        /* テクスチャ座標生成関数の設定 */
-        glTexGendv GL_S, GL_OBJECT_PLANE, DoubleBuffer.wrap([1.0, 0.0, 0.0] as double[])
-        glTexGendv GL_T, GL_OBJECT_PLANE, DoubleBuffer.wrap([0.0, 1.0, 0.0] as double[])
         int[] a = [0]
         glGetIntegerv(GL_MAX_TEXTURE_UNITS, IntBuffer.wrap(a))
         println "max texture units: $a"
@@ -130,22 +123,6 @@ def display = { GLAutoDrawable drawable ->
         glTexCoord2d(0d, 1d); glVertex3d(-50d, 100d, 0d)
         glEnd()
         glDisable GL_TEXTURE_2D
-
-        /* テクスチャ座標の自動生成を有効にする */
-        glEnable GL_TEXTURE_GEN_S
-        glEnable GL_TEXTURE_GEN_T
-
-        glPushMatrix()
-        glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
-        glut.glutSolidSphere(30d, 20, 20)
-        glTranslated(40d, 0d, 0d)
-        glRotated(rotationAnglePerFrame*animator.getTotalFPSFrames(), 0d, 1d, 0d)
-        glut.glutSolidCube 10f
-        glPopMatrix()
-
-        /* テクスチャ座標の自動生成を無効にする */
-        glDisable GL_TEXTURE_GEN_S
-        glDisable GL_TEXTURE_GEN_T
 
         glUseProgram 0
         glColor3f(0.1f, 0.1f, 0.1f)
