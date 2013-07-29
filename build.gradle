@@ -24,7 +24,8 @@ def scripts = ['runHello':'sample.hello',
                'run3D':'sample.Sample3D',
                'runParam':'glslpractice.setParam',
                'runLighting':'glslpractice.lighting',
-			   'runTexture':'glslpractice.texture']
+			   'runTexture':'glslpractice.texture',
+               'runOffscreen':'glslpractice.offscreenBufferTexture']
 scripts.each { taskName, mainClassName ->
     task "$taskName" (type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
